@@ -51,17 +51,17 @@ def convert_files_sizes_to_fn(files_sizes):
 			B.append(A)
 	return'\n'.join(B)
 def fetch_metadata(torrent_hash,ses):
-	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='http://176.124.218.154:54321/api/check';E={G:H};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
+	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check';E={G:H};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
 	if I['response']:logger.warning('EXISTS: '+str(B));return
 	A=get_torrent_info(B,ses)
 	if not A:logger.warning('NO META: '+str(B));return
-	F={_C:A[_C],'hash_v1':A[_E],'bytes_length':A[_F],'files_sizes':A[_A],'seeds':int(A[_B][_G]),'peers':int(A[_B][_H]),'copies':int(A[_B][_I]),'is_public':True,'updated':datetime.now().isoformat(),'num_files':len(A[_A]),'folders_names':convert_files_sizes_to_fn(A[_A])};D='http://176.124.218.154:54321/api/paste';E={G:H};C=requests.post(D,data=json.dumps(F),headers=E);logger.info(str(B)+f" {C.status_code} "+str(C.json()))
+	F={_C:A[_C],'hash_v1':A[_E],'bytes_length':A[_F],'files_sizes':A[_A],'seeds':int(A[_B][_G]),'peers':int(A[_B][_H]),'copies':int(A[_B][_I]),'is_public':True,'updated':datetime.now().isoformat(),'num_files':len(A[_A]),'folders_names':convert_files_sizes_to_fn(A[_A])};D='https://torrent.libreseed.icu/api/paste';E={G:H};C=requests.post(D,data=json.dumps(F),headers=E);logger.info(str(B)+f" {C.status_code} "+str(C.json()))
 settings={'user_agent':'libreseed/3.3','listen_interfaces':'0.0.0.0:6881-6889','alert_mask':lt.alert.category_t.all_categories,'enable_dht':True,'enable_lsd':_D,'enable_upnp':_D,'enable_natpmp':_D}
 ses=lt.session(settings)
 logger.info('DHT bootstrap...')
 discovered_torrents={}
 fetched=[]
-"\nfetch_metadata('5337bb57bd672d6bf2282379a8f52e42100312c4',ses)\ninput('main')\n"
+"\nwhile True:\n    fetch_metadata('60a33c6720d6445bdc4e68b0b2b5e48f96dfc39c',ses)\n    fetch_metadata('56bbfd878f4e65d03602ba1ed7cef292c3540f0a',ses)\n    fetch_metadata('ff546b06402409c826ab6a596ae250752d38249b',ses)\n    fetch_metadata('ab345fc81f7d62aebde4c8a1f983a6967e6806c6',ses)\n\n    print('cycle')\n    time.sleep(5)\n\ninput('main')\n"
 while True:
 	alerts=ses.pop_alerts()
 	for a in alerts:
