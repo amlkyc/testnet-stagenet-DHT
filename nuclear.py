@@ -13,7 +13,8 @@ from datetime import datetime
 import binascii,tempfile
 from threading import Thread
 import logging
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+ua='testnet1'
+logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='rdt.log',filemode='a')
 logger=logging.getLogger(__name__)
 def get_torrent_info(info_hash_hex,ses):
 	N='upload_rate';M='download_rate';H=ses;F=info_hash_hex;T=binascii.unhexlify(F);O=f"magnet:?xt=urn:btih:{F}";I=tempfile.mkdtemp();J=lt.parse_magnet_uri(O);J.save_path=I;C=H.add_torrent(J);P=55;Q=time.time()
@@ -51,7 +52,10 @@ def convert_files_sizes_to_fn(files_sizes):
 			B.append(A)
 	return'\n'.join(B)
 def fetch_metadata(torrent_hash,ses):
-	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check?test1';E={G:H};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
+	try:return fetch_metadata_inner(torrent_hash,ses)
+	except Exception as A:logger.critical(str(A));return
+def fetch_metadata_inner(torrent_hash,ses):
+	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check';E={G:H,'User-Agent':ua};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
 	if I['response']:logger.warning('EXISTS: '+str(B));return
 	A=get_torrent_info(B,ses)
 	if not A:logger.warning('NO META: '+str(B));return
