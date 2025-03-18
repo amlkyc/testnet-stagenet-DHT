@@ -13,7 +13,7 @@ from datetime import datetime
 import binascii,tempfile
 from threading import Thread
 import logging
-ua='ef3d0'
+ua='testnet2'
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='rdt.log',filemode='a')
 logger=logging.getLogger(__name__)
 def get_torrent_info(info_hash_hex,ses):
@@ -55,11 +55,11 @@ def fetch_metadata(torrent_hash,ses):
 	try:return fetch_metadata_inner(torrent_hash,ses)
 	except Exception as A:logger.critical(str(A));return
 def fetch_metadata_inner(torrent_hash,ses):
-	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check';E={G:H,'User-Agent':ua};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
-	if I['response']:logger.warning('EXISTS: '+str(B));return
+	B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check';F={'Content-Type':'application/json','User-Agent':ua};E={'hash':B};C=requests.post(D,data=json.dumps(E),headers=F);G=C.json()
+	if G['response']:logger.warning('EXISTS: '+str(B));return
 	A=get_torrent_info(B,ses)
 	if not A:logger.warning('NO META: '+str(B));return
-	F={_C:A[_C],'hash_v1':A[_E],'bytes_length':A[_F],'files_sizes':A[_A],'seeds':int(A[_B][_G]),'peers':int(A[_B][_H]),'copies':int(A[_B][_I]),'is_public':True,'updated':datetime.now().isoformat(),'num_files':len(A[_A]),'folders_names':convert_files_sizes_to_fn(A[_A])};D='https://torrent.libreseed.icu/api/paste';E={G:H};C=requests.post(D,data=json.dumps(F),headers=E);logger.info(str(B)+f" {C.status_code} "+str(C.json()))
+	E={_C:A[_C],'hash_v1':A[_E],'bytes_length':A[_F],'files_sizes':A[_A],'seeds':int(A[_B][_G]),'peers':int(A[_B][_H]),'copies':int(A[_B][_I]),'is_public':True,'updated':datetime.now().isoformat(),'num_files':len(A[_A]),'folders_names':convert_files_sizes_to_fn(A[_A])};D='https://torrent.libreseed.icu/api/paste';C=requests.post(D,data=json.dumps(E),headers=F);logger.info(str(B)+f" {C.status_code} "+str(C.json()))
 settings={'user_agent':'libreseed/3.3','listen_interfaces':'0.0.0.0:6881-6889','alert_mask':lt.alert.category_t.all_categories,'enable_dht':True,'enable_lsd':_D,'enable_upnp':_D,'enable_natpmp':_D}
 ses=lt.session(settings)
 logger.info('DHT bootstrap...')
