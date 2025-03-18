@@ -13,7 +13,7 @@ from datetime import datetime
 import binascii,tempfile
 from threading import Thread
 import logging
-ua='testnet1'
+ua='14b24'
 logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',filename='rdt.log',filemode='a')
 logger=logging.getLogger(__name__)
 def get_torrent_info(info_hash_hex,ses):
