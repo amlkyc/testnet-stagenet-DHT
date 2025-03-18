@@ -51,7 +51,7 @@ def convert_files_sizes_to_fn(files_sizes):
 			B.append(A)
 	return'\n'.join(B)
 def fetch_metadata(torrent_hash,ses):
-	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check';E={G:H};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
+	H='application/json';G='Content-Type';B=torrent_hash;logger.info('FETCHING: '+str(B));D='https://torrent.libreseed.icu/api/check?test1';E={G:H};F={'hash':B};C=requests.post(D,data=json.dumps(F),headers=E);I=C.json()
 	if I['response']:logger.warning('EXISTS: '+str(B));return
 	A=get_torrent_info(B,ses)
 	if not A:logger.warning('NO META: '+str(B));return
